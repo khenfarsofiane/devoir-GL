@@ -1,0 +1,88 @@
+package devS
+public
+   system SystemS
+   end SystemS;
+
+   system implementation SystemS.impl
+      subcomponents
+         P1: process ProcessP1.impl;
+         P2: process ProcessP2.impl;
+         DeviceD: device DeviceD.impl;
+         BusB: bus BusB.impl;
+         ProcessorP: processor ProcessorP.impl;
+      connections
+         Conn1: port P1.T1_Output -> P1.T2_Input;
+         Conn2: port P1.T1_Output -> P2.T3_Input;
+         Conn3: port P2.T3_Output -> DeviceD.Device_Input;
+      properties
+         Deployment_Properties::Actual_Processor_Binding => (reference (ProcessorP)) applies to P1, P2;
+   end SystemS.impl;
+   
+	
+   process ProcessP1
+   end ProcessP1;
+   
+   process implementation ProcessP1.impl
+      subcomponents
+         T1: thread ThreadT1.impl;
+         T2: thread ThreadT2.impl;
+      connections
+         Conn1: port T1.Output -> T2.Input;
+      end ProcessP1.impl;
+
+   process ProcessP2
+   end ProcessP2;
+
+   process implementation ProcessP2.impl
+      subcomponents
+         T3: thread ThreadT3.impl;
+      connections
+         Conn1: port T3.Output -> DeviceD.Device_Input;
+      end ProcessP2.impl;
+
+   thread ThreadT1
+   end ThreadT1;
+
+   thread implementation ThreadT1.impl
+      features
+         Output: out event data port;
+      end ThreadT1.impl;
+
+   thread ThreadT2
+   end ThreadT2;
+
+   thread implementation ThreadT2.impl
+      features
+         Input: in event data port;
+      end ThreadT2.impl;
+
+   thread ThreadT3
+   end ThreadT3;
+
+   thread implementation ThreadT3.impl
+      features
+         Input: in event data port; 
+         Output: out event data port;
+      end ThreadT3.impl;
+
+   device DeviceD 
+   end DeviceD;
+
+   device implementation DeviceD.impl
+      features
+         Device_Input: in event data port;
+      end DeviceD.impl;
+
+   bus BusB
+   end BusB;
+
+   bus implementation BusB.impl
+   end BusB.impl;
+
+   processor ProcessorP
+   end ProcessorP;
+
+   processor implementation ProcessorP.impl
+   end ProcessorP.impl;
+
+end devS;
